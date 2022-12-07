@@ -42,3 +42,10 @@ services:
     restart: always
     ports:
       - "3000:3000"
+
+  demo-mq:
+    image: rabbitmq:3.11-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"

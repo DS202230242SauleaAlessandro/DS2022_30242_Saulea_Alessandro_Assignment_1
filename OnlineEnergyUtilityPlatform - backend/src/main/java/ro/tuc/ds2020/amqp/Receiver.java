@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
 import ro.tuc.ds2020.dtos.MeasurementJSON;
 import ro.tuc.ds2020.dtos.builders.MeasurementBuilder;
 import ro.tuc.ds2020.entities.Measurement;
@@ -53,21 +54,26 @@ public class Receiver implements CommandLineRunner {
                 System.out.println(measurementJSON);
 
                 var measurementDTO = MeasurementBuilder.toDTO(measurementJSON);
-                var measurement = measurementService.findMeasurementNoException(
-                        measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
-                if (measurement != null){
-                    measurementDTO.setConsumption(measurementDTO.getConsumption() + measurement.getConsumption());
-                    measurementService.update(measurementDTO);
-                }
-                else{
-                    measurementService.insert(measurementDTO);
-                }
+                try {
+                    var measurement = measurementService.findMeasurementNoException(
+                            measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
+                    if (measurement != null){
+                        measurementDTO.setConsumption(measurementDTO.getConsumption() + measurement.getConsumption());
+                        measurementService.update(measurementDTO);
+                    }
+                    else{
+                        measurementService.insert(measurementDTO);
+                    }
 
-                measurement = measurementService.findMeasurementNoException(
-                        measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
+                    measurement = measurementService.findMeasurementNoException(
+                            measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
 
-                if (measurement.getConsumption() > measurement.getDevice().getMaxConsumption()){
-                    simpMessagingTemplate.convertAndSend("/topic/notify", new Notification(measurement));
+                    if (measurement.getConsumption() > measurement.getDevice().getMaxConsumption()){
+                        simpMessagingTemplate.convertAndSend("/topic/notify", new Notification(measurement));
+                    }
+                }
+                catch(ResourceNotFoundException e){
+                    System.out.println("Device not found");
                 }
 
                 channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
