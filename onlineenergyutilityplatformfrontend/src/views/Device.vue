@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentDevice.userDTO.uuid === currentUser.uuid">
-    <h1>{{ currentDevice.name }}</h1>
+    <h1>{{ currentDevice.description }}</h1>
     <v-container>
       <v-row>
         <v-col><v-date-picker v-model="selectedDay" @change="showChart"></v-date-picker></v-col>
@@ -48,10 +48,10 @@ export default {
       this.measurements = (await axios.get(`http://localhost:8080/measurements/bydevice&date?deviceId=${this.deviceId}&date=${this.selectedDay}`)).data
       this.charData = {}
       this.measurements.forEach(measurement => {
-        var date = new Date(measurement.timestamp)
-        var hours = date.getHours()
-        var minutes = date.getMinutes()
-        var key = (hours < 10 ? '0' : '') + hours +':' +(minutes < 10 ? '0' : '') + minutes
+        const date = new Date(measurement.timestamp);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const key = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
         this.charData[key] = measurement.consumption
       })
     }

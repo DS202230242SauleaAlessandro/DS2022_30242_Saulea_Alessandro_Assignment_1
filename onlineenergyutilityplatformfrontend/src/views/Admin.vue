@@ -52,7 +52,7 @@ export default {
   methods: {
     goHome(){
       this.$router.push('.')
-      this.$router.go()
+      this.$router.go(0)
     }
   }
 }

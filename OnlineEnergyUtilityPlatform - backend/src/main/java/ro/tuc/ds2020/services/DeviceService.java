@@ -1,6 +1,7 @@
 package ro.tuc.ds2020.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
 import ro.tuc.ds2020.dtos.DeviceDTO;
@@ -24,7 +25,7 @@ public class DeviceService {
         return deviceRepository.findAll().stream().map(DeviceBuilder::toDTO).collect(Collectors.toList());
     }
 
-    private Device findDeviceById(UUID uuid){
+    public Device findDeviceById(UUID uuid){
         return deviceRepository.findById(uuid)
                 .orElseThrow(() -> new ResourceNotFoundException("Device not found"));
     }
@@ -39,15 +40,15 @@ public class DeviceService {
 
     public DeviceDTO insert(DeviceDTO deviceDTO){
         System.out.println(deviceDTO.getUserDTO().getUuid());
-        User user = findUserById(deviceDTO.getUserDTO().getUuid());
-        Device device = DeviceBuilder.toEntity(deviceDTO);
+        var user = findUserById(deviceDTO.getUserDTO().getUuid());
+        var device = DeviceBuilder.toEntity(deviceDTO);
         device.setUser(user);
         return DeviceBuilder.toDTO(deviceRepository.save(device));
     }
 
     public DeviceDTO update(DeviceDTO deviceDTO){
-        Device device = findDeviceById(deviceDTO.getUuid());
-        User user = findUserById(deviceDTO.getUserDTO().getUuid());
+        var device = findDeviceById(deviceDTO.getUuid());
+        var user = findUserById(deviceDTO.getUserDTO().getUuid());
         device.setAddress(deviceDTO.getAddress());
         device.setDescription(deviceDTO.getDescription());
         device.setMaxConsumption(deviceDTO.getMaxConsumption());

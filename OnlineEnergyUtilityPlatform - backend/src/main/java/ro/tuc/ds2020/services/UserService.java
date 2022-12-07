@@ -1,6 +1,7 @@
 package ro.tuc.ds2020.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.controllers.handlers.exceptions.model.DuplicateResourceException;
 import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
@@ -41,8 +42,8 @@ public class UserService {
     }
 
     public UserDTO update(UserDTO userDTO){
-        User user = findUserById(userDTO.getUuid());
-        User sameUsernameUser = userRepository.findByUsername(userDTO.getUsername()).orElse(null);
+        var user = findUserById(userDTO.getUuid());
+        var sameUsernameUser = userRepository.findByUsername(userDTO.getUsername()).orElse(null);
         if (sameUsernameUser != null && !sameUsernameUser.getUuid().equals(user.getUuid())){
             throw new DuplicateResourceException("Username already used!");
         }
