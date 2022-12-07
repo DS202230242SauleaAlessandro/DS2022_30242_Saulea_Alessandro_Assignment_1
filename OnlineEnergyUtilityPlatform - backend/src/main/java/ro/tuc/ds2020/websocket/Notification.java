@@ -1,7 +1,7 @@
 package ro.tuc.ds2020.websocket;
 
 import lombok.Data;
-import ro.tuc.ds2020.entities.Measurement;
+import ro.tuc.ds2020.dtos.MeasurementDTO;
 
 import java.util.UUID;
 
@@ -10,9 +10,9 @@ public class Notification {
     private UUID userId;
     private String message;
 
-    public Notification(Measurement measurement) {
-        this.userId = measurement.getDevice().getUser().getUuid();
-        this.message = "Your device " + measurement.getDevice().getDescription() + " has consumed too much energy at "
-                + measurement.getTimestamp();
+    public Notification(MeasurementDTO measurementDTO) {
+        this.userId = measurementDTO.getDevice().getUserDTO().getUuid();
+        this.message = "Your device " + measurementDTO.getDevice().getDescription() + " has consumed too much energy at "
+                + measurementDTO.getTimestamp();
     }
 }

@@ -11,7 +11,9 @@ import java.util.List;
 
 public interface MeasurementRepository extends JpaRepository<Measurement, MeasurementId> {
 
-    @Query(value = "select m from Measurement m where m.measurementId.device = :device and cast(m.measurementId.timestamp as date) = :date")
+    @Query(value = "select m from Measurement m " +
+            "where m.measurementId.device = :device and cast(m.measurementId.timestamp as date) = :date " +
+            "order by m.measurementId.timestamp")
     List<Measurement> findAllByDeviceAndDate(Device device, Date date);
 
     @Query(value = "select m from Measurement m where m.measurementId.device = :device")

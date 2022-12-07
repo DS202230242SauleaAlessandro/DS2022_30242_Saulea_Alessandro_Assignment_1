@@ -15,7 +15,7 @@
 </template>
 
 <script>
-//https://www.youtube.com/watch?v=vIxaVlHdpJU
+
 import unauthorized from "@/components/Unauthorized";
 import axios from "axios";
 

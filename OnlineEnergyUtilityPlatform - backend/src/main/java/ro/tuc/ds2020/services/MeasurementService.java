@@ -34,13 +34,14 @@ public class MeasurementService {
                 .map(MeasurementBuilder::toDTO).collect(Collectors.toList());
     }
 
-    public Measurement findMeasurementByDeviceIdAndTimestamp(UUID deviceId, LocalDateTime timestamp){
+    private Measurement findMeasurementByDeviceIdAndTimestamp(UUID deviceId, LocalDateTime timestamp){
         return measurementRepository.findById(new MeasurementId(findDeviceById(deviceId), timestamp))
                 .orElseThrow(() -> new ResourceNotFoundException("Measurement not found"));
     }
 
-    public Measurement findMeasurementNoException(UUID deviceId, LocalDateTime timestamp){
-        return measurementRepository.findById(new MeasurementId(findDeviceById(deviceId), timestamp)).orElse(null);
+    public MeasurementDTO findMeasurementNoException(UUID deviceId, LocalDateTime timestamp){
+        var measurement = measurementRepository.findById(new MeasurementId(findDeviceById(deviceId), timestamp)).orElse(null);
+        return measurement != null ? MeasurementBuilder.toDTO(measurement) : null;
     }
 
     public MeasurementDTO findByDeviceIdAndTimestamp(UUID deviceId, LocalDateTime timestamp){

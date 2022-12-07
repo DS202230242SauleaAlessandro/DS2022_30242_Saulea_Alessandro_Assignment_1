@@ -7,27 +7,16 @@ import com.rabbitmq.client.DeliverCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundException;
 import ro.tuc.ds2020.dtos.MeasurementJSON;
 import ro.tuc.ds2020.dtos.builders.MeasurementBuilder;
-import ro.tuc.ds2020.entities.Measurement;
 import ro.tuc.ds2020.services.MeasurementService;
 import ro.tuc.ds2020.websocket.Notification;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-
-// https://www.baeldung.com/jackson-json-view-annotation
-// https://www.baeldung.com/jackson-deserialization
-// https://www.postgresqltutorial.com/postgresql-jdbc/connecting-to-postgresql-database/
-// https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html
-// https://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html
-// https://www.baeldung.com/java-byte-array-to-uuid
-// https://spring.io/guides/gs/messaging-stomp-websocket/
-// https://stackoverflow.com/questions/54275069/module-not-found-error-cant-resolve-net-in-node-modules-stompjs-lib
 
 @Component
 @RequiredArgsConstructor
@@ -52,24 +41,20 @@ public class Receiver implements CommandLineRunner {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 var measurementJSON = mapper.readValue(delivery.getBody(), MeasurementJSON.class);
                 System.out.println(measurementJSON);
+                var measurementFromJSON = MeasurementBuilder.toDTO(measurementJSON);
 
-                var measurementDTO = MeasurementBuilder.toDTO(measurementJSON);
                 try {
-                    var measurement = measurementService.findMeasurementNoException(
-                            measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
-                    if (measurement != null){
-                        measurementDTO.setConsumption(measurementDTO.getConsumption() + measurement.getConsumption());
-                        measurementService.update(measurementDTO);
+                    var measurementDTO = measurementService.findMeasurementNoException(
+                            measurementJSON.getDeviceId(), measurementFromJSON.getTimestamp());
+                    if (measurementDTO != null){
+                        measurementDTO.setConsumption(measurementDTO.getConsumption() + measurementFromJSON.getConsumption());
+                        measurementDTO = measurementService.update(measurementDTO);
                     }
                     else{
-                        measurementService.insert(measurementDTO);
+                        measurementDTO = measurementService.insert(measurementFromJSON);
                     }
-
-                    measurement = measurementService.findMeasurementNoException(
-                            measurementDTO.getDevice().getUuid(), measurementDTO.getTimestamp());
-
-                    if (measurement.getConsumption() > measurement.getDevice().getMaxConsumption()){
-                        simpMessagingTemplate.convertAndSend("/topic/notify", new Notification(measurement));
+                    if (measurementDTO.getConsumption() > measurementDTO.getDevice().getMaxConsumption()){
+                        simpMessagingTemplate.convertAndSend("/topic/notify", new Notification(measurementDTO));
                     }
                 }
                 catch(ResourceNotFoundException e){
