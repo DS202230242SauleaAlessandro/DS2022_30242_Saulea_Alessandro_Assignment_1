@@ -44,4 +44,9 @@ stages:
         dockerfile: $(dockerfilePath2)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          $(tag)
+              $(tag)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'ds-2020'
+        publishLocation: 'Container'
