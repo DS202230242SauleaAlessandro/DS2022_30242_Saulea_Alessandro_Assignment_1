@@ -21,7 +21,7 @@ services:
     container_name: demo-db
 
   demo-be:
-    image: be
+    image: containerregistrysauleaalessandro30242.azurecr.io/be
     restart: always
     ports:
       - "8080:8080"
@@ -38,7 +38,7 @@ services:
         condition: service_healthy
   
   demo-fe:
-    image: fe
+    image: containerregistrysauleaalessandro30242.azurecr.io/fe
     restart: always
     ports:
       - "3000:3000"
