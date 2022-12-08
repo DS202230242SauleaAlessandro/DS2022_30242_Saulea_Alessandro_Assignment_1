@@ -14,7 +14,7 @@ variables:
   containerRegistry: 'containerregistrysauleaalessandro30242.azurecr.io'
   dockerfilePath1: '$(Build.SourcesDirectory)/OnlineEnergyUtilityPlatform - backend/Dockerfile'
   dockerfilePath2: '$(Build.SourcesDirectory)/onlineenergyutilityplatformfrontend/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
 stages:
 - stage: Build
