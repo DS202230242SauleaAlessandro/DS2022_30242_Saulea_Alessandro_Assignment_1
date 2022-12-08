@@ -7,7 +7,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.125'
+          cpus: '0.5'
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
       timeout: 45s
@@ -27,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.125'
+          cpus: '0.5'
     restart: always
     ports:
       - "8080:8080"
@@ -48,7 +48,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.125'
+          cpus: '0.5'
     restart: always
     ports:
       - "3000:3000"
@@ -58,7 +58,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.125'
+          cpus: '0.5'
     restart: always
     ports:
       - "15672:15672"
