@@ -11,8 +11,6 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '2af03772-26cb-4268-998c-0fd89a9c2f5b'
-  imageRepository1: 'dssauleaalessandrodssauleaalessandroassignmentbackend'
-  imageRepository2: 'dssauleaalessandrodssauleaalessandroassignmentfrontend'
   containerRegistry: 'containerregistrysauleaalessandro30242.azurecr.io'
   dockerfilePath1: '$(Build.SourcesDirectory)/OnlineEnergyUtilityPlatform - backend/Dockerfile'
   dockerfilePath2: '$(Build.SourcesDirectory)/onlineenergyutilityplatformfrontend/Dockerfile'
@@ -31,7 +29,7 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository1)
+        repository: be
         dockerfile: $(dockerfilePath1)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
@@ -40,7 +38,7 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository2)
+        repository: fe
         dockerfile: $(dockerfilePath2)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
