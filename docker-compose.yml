@@ -31,8 +31,6 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    domainname:
-      energy-app
     environment:
       #- DB_IP=172.22.0.2
       - DB_IP=demo-db
@@ -66,5 +64,4 @@ services:
       - "15672:15672"
       - "5672:5672"
     volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
