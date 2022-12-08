@@ -3,7 +3,7 @@ version: '3'
 services:
 
   demo-db:
-    image: postgres
+    image: containerregistrysauleaalessandro30242.azurecr.io/db
 
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
@@ -44,7 +44,7 @@ services:
       - "3000:3000"
 
   demo-mq:
-    image: rabbitmq
+    image: containerregistrysauleaalessandro30242.azurecr.io/mq
     restart: always
     ports:
       - "15672:15672"
