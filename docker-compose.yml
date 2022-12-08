@@ -4,7 +4,10 @@ services:
 
   demo-db:
     image: containerregistrysauleaalessandro30242.azurecr.io/db
-
+    deploy:
+      resources:
+        limits:
+          cpus: '0.125'
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
       timeout: 45s
@@ -21,6 +24,10 @@ services:
 
   demo-be:
     image: containerregistrysauleaalessandro30242.azurecr.io/be
+    deploy:
+      resources:
+        limits:
+          cpus: '0.125'
     restart: always
     ports:
       - "8080:8080"
@@ -38,12 +45,20 @@ services:
   
   demo-fe:
     image: containerregistrysauleaalessandro30242.azurecr.io/fe
+    deploy:
+      resources:
+        limits:
+          cpus: '0.125'
     restart: always
     ports:
       - "3000:3000"
 
   demo-mq:
     image: containerregistrysauleaalessandro30242.azurecr.io/mq
+    deploy:
+      resources:
+        limits:
+          cpus: '0.125'
     restart: always
     ports:
       - "15672:15672"
