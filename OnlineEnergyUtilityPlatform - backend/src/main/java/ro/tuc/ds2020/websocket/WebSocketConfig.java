@@ -13,9 +13,7 @@ import java.net.InetAddress;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/gs-guide-websocket")
-                .setAllowedOrigins("http://" + InetAddress.getLoopbackAddress().getHostName() + ":3000")
-                .withSockJS();
+        registry.addEndpoint("/gs-guide-websocket").setAllowedOrigins("*").withSockJS();
     }
 
     @Override
