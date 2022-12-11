@@ -105,15 +105,16 @@ export default {
         maxConsumption: 0,
         userDTO: {}
       },
-      created: false
+      created: false,
+      origin: window.location.protocol + '//' + window.location.hostname + ':8080',
     }
   },
 
   async created(){
     // https://www.npmjs.com/package/vuejs-datetimepicker
-    this.users = (await axios.get('http://localhost:8080/users')).data
-    this.devices = (await axios.get('http://localhost:8080/devices')).data
-    this.$root.$on('DeviceCRUD refresh', async () => this.users = (await axios.get('http://localhost:8080/users')).data)
+    this.users = (await axios.get(this.origin + '/users')).data
+    this.devices = (await axios.get(this.origin + '/devices')).data
+    this.$root.$on('DeviceCRUD refresh', async () => this.users = (await axios.get(this.origin + '/users')).data)
   },
 
   methods: {
@@ -125,19 +126,19 @@ export default {
     async deleteItem (item) {
       if (confirm('Are you sure you want to delete this item?')){
         try{
-          await axios.delete('http://localhost:8080/devices/'+item.uuid)
+          await axios.delete(this.origin + '/devices/' + item.uuid)
         }catch(e){
           console.log('cannot delete')
         }
       }
-      this.devices = (await axios.get('http://localhost:8080/devices')).data
+      this.devices = (await axios.get(this.origin + '/devices')).data
     },
 
     async close() {
       this.created = false
       this.editedItem = Object.assign({}, this.defaultItem);
       this.editedIndex = -1;
-      this.devices = (await axios.get('http://localhost:8080/devices')).data
+      this.devices = (await axios.get(this.origin + '/devices')).data
     },
 
     addNew() {
@@ -155,7 +156,7 @@ export default {
         if (this.created) {
           this.editedItem.maxConsumption = parseInt(this.editedItem.maxConsumption)
           try{
-            await axios.post('http://localhost:8080/devices', this.editedItem)
+            await axios.post(this.origin + '/devices', this.editedItem)
           }
           catch(e){
             alert('Invalid data')
@@ -165,7 +166,7 @@ export default {
         else{
           console.log(this.editedItem)
           try{
-            await axios.put('http://localhost:8080/devices', this.editedItem)
+            await axios.put(this.origin + '/devices', this.editedItem)
           }catch(e){
             alert('Invalid data!')
           }

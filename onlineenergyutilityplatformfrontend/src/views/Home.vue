@@ -54,11 +54,12 @@ export default {
         }
       ],
       search: '',
+      origin: window.location.protocol + '//' + window.location.hostname + ':8080',
     }
   },
   async created(){
-    this.currentUser = (await axios.get("http://localhost:8080/users/"+window.sessionStorage.getItem("userId"))).data
-    this.devices = (await axios.get(`http://localhost:8080/users/${this.currentUser.uuid}/devices`)).data
+    this.currentUser = (await axios.get(this.origin+"/users/"+window.sessionStorage.getItem("userId"))).data
+    this.devices = (await axios.get(this.origin+`/users/${this.currentUser.uuid}/devices`)).data
   },
 
   methods:{

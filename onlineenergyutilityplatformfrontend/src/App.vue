@@ -57,11 +57,13 @@ export default {
 
   async created(){
     const userId = window.sessionStorage.getItem("userId")
+    const origin = window.location.protocol + '//' + window.location.hostname + ':8080'
+
     if (userId !== null){
       try{
-        this.currentUser = (await axios.get("http://localhost:8080/users/"+window.sessionStorage.getItem("userId"))).data
+        this.currentUser = (await axios.get(origin + "/users/" +window.sessionStorage.getItem("userId"))).data
 
-        const stompClient = Stomp.over(new SockJS('http://localhost:8080/gs-guide-websocket'));
+        const stompClient = Stomp.over(new SockJS(origin + '/gs-guide-websocket'));
         stompClient.connect({username: window.sessionStorage.getItem("userId")}, () => {
           stompClient.subscribe('/topic/notify', payload => {
             const notification = JSON.parse(payload.body)
@@ -72,7 +74,6 @@ export default {
         console.log('no user logged in')
       }
     }
-    else await this.$router.push({path: '/login'})
   },
 
   methods:{

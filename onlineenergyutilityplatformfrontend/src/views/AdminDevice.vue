@@ -112,14 +112,15 @@ export default {
       },
       newTimestamp:'2022-01-01 00:00:00',
       currentUser: {},
+      origin: window.location.protocol + '//' + window.location.hostname + ':8080',
     }
   },
 
   async created() {
-    this.currentUser = (await axios.get('http://localhost:8080/users/'+window.sessionStorage.getItem("userId"))).data
+    this.currentUser = (await axios.get(this.origin+'/users/'+window.sessionStorage.getItem("userId"))).data
     this.deviceId = this.$route.path.split('/')[3]
-    this.currentDevice = (await axios.get("http://localhost:8080/devices/"+this.deviceId)).data
-    this.measurements = (await axios.get("http://localhost:8080/measurements/bydevice/"+this.deviceId)).data
+    this.currentDevice = (await axios.get(this.origin+"/devices/"+this.deviceId)).data
+    this.measurements = (await axios.get(this.origin+"/measurements/bydevice/"+this.deviceId)).data
     this.editedItem.device.uuid = this.currentDevice.uuid
   },
 
@@ -132,18 +133,18 @@ export default {
     async deleteItem (item) {
       if (confirm('Are you sure you want to delete this item?')){
         try{
-          await axios.delete(`http://localhost:8080/measurements?deviceId=${this.deviceId}&timestamp=${item.timestamp}`)
+          await axios.delete(this.origin+`/measurements?deviceId=${this.deviceId}&timestamp=${item.timestamp}`)
         }catch(e){
           alert('cannot delete')
         }
       }
-      this.measurements = (await axios.get("http://localhost:8080/measurements/bydevice/"+this.deviceId)).data
+      this.measurements = (await axios.get(this.origin+"/measurements/bydevice/"+this.deviceId)).data
     },
 
     async close() {
       this.editedItem = Object.assign({}, this.defaultItem);
       this.editedIndex = -1;
-      this.measurements = (await axios.get("http://localhost:8080/measurements/bydevice/"+this.deviceId)).data
+      this.measurements = (await axios.get(this.origin+"/measurements/bydevice/"+this.deviceId)).data
     },
 
     async addNew() {
@@ -152,18 +153,18 @@ export default {
       this.newItem.consumption = parseInt(this.newItem.consumption)
       console.log(this.newItem)
       try{
-        await axios.post('http://localhost:8080/measurements', this.newItem)
+        await axios.post(this.origin+'/measurements', this.newItem)
       }
       catch(e){
         alert('Invalid data!')
       }
-      this.measurements = (await axios.get("http://localhost:8080/measurements/bydevice/"+this.deviceId)).data
+      this.measurements = (await axios.get(this.origin+"/measurements/bydevice/"+this.deviceId)).data
     },
 
     async save () {
       if (this.editedIndex > -1) {
         try{
-          await axios.put('http://localhost:8080/measurements', this.editedItem)
+          await axios.put(this.origin+'/measurements', this.editedItem)
         }catch(e){
           alert('Invalid data!')
         }

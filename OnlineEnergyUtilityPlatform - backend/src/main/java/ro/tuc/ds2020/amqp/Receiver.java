@@ -16,6 +16,9 @@ import ro.tuc.ds2020.services.MeasurementService;
 import ro.tuc.ds2020.websocket.Notification;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 @Component
@@ -26,14 +29,23 @@ public class Receiver implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        var factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        final String user = "kdayjlqa";
+        final String password = "Jh7phazVIlRJrACUZBYSMlLD23aj9dCA";
+        final String host = "goose.rmq2.cloudamqp.com";
+        final String QUEUE_NAME = "metering_queue";
 
         var mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+        var factory = new ConnectionFactory();
 
         try {
-            String QUEUE_NAME = "metering_queue";
+            factory.setUri("amqps://" + user + ":" + password + "@" + host + "/" + user);
+        } catch (URISyntaxException | NoSuchAlgorithmException | KeyManagementException e) {
+            System.out.println(e.getMessage());
+        }
+        factory.setConnectionTimeout(30000);
+
+        try {
             var channel = factory.newConnection().createChannel();
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             System.out.println("Waiting for messages");

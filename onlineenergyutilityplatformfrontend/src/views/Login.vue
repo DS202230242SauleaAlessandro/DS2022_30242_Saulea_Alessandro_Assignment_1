@@ -42,14 +42,15 @@
     data() {
       return {
         username: '',
-        password: ''
+        password: '',
+        origin: window.location.protocol + '//' + window.location.hostname + ':8080',
       }
     },
 
     methods:{
       async login(){
         try{
-          const result = await axios.post("http://localhost:8080/users/login", {
+          const result = await axios.post(this.origin + "/users/login", {
             username: this.username,
             password: this.password
           })

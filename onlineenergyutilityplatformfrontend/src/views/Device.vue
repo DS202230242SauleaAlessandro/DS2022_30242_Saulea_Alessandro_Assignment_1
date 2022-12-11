@@ -33,19 +33,20 @@ export default {
       deviceId: '',
       selectedDay: null,
       charData: {
-      }
+      },
+      origin: window.location.protocol + '//' + window.location.hostname + ':8080'
     }
   },
 
   async created() {
-    this.currentUser = (await axios.get('http://localhost:8080/users/' + window.sessionStorage.getItem("userId"))).data
+    this.currentUser = (await axios.get(this.origin+'/users/' + window.sessionStorage.getItem("userId"))).data
     this.deviceId = this.$route.path.split('/')[2]
-    this.currentDevice = (await axios.get("http://localhost:8080/devices/" + this.deviceId)).data
+    this.currentDevice = (await axios.get(this.origin+"/devices/" + this.deviceId)).data
   },
 
   methods: {
     async showChart(){
-      this.measurements = (await axios.get(`http://localhost:8080/measurements/bydevice&date?deviceId=${this.deviceId}&date=${this.selectedDay}`)).data
+      this.measurements = (await axios.get(this.origin+`/measurements/bydevice&date?deviceId=${this.deviceId}&date=${this.selectedDay}`)).data
       this.charData = {}
       this.measurements.forEach(measurement => {
         const date = new Date(measurement.timestamp);

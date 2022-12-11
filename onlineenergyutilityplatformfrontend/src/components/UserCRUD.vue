@@ -97,12 +97,13 @@ export default {
       },
       created: false,
       currentUser: {},
+      origin: window.location.protocol + '//' + window.location.hostname + ':8080',
     }
   },
 
   async created(){
-    this.currentUser = (await axios.get("http://localhost:8080/users/"+window.sessionStorage.getItem("userId"))).data
-    this.users = (await axios.get('http://localhost:8080/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
+    this.currentUser = (await axios.get(this.origin+'/users/'+window.sessionStorage.getItem("userId"))).data
+    this.users = (await axios.get(this.origin+'/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
   },
 
   methods: {
@@ -114,20 +115,20 @@ export default {
     async deleteItem (item) {
       if (confirm('Are you sure you want to delete this item?')){
         try{
-          await axios.delete('http://localhost:8080/users/'+item.uuid)
+          await axios.delete(this.origin+'/users/'+item.uuid)
           this.$root.$emit('DeviceCRUD refresh', 'list of users refreshed')
         }catch(e){
           alert('cannot delete user because it has devices')
         }
       }
-      this.users = (await axios.get('http://localhost:8080/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
+      this.users = (await axios.get(this.origin+'/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
     },
 
     async close() {
       this.created = false
       this.editedItem = Object.assign({}, this.defaultItem);
       this.editedIndex = -1;
-      this.users = (await axios.get('http://localhost:8080/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
+      this.users = (await axios.get(this.origin+'/users')).data.filter(user => user.uuid !== this.currentUser.uuid)
     },
 
     addNew() {
@@ -144,7 +145,7 @@ export default {
         if (this.created) {
           try{
             this.editedItem.isAdmin = this.editedItem.admin
-            await axios.post('http://localhost:8080/users', this.editedItem)
+            await axios.post(this.origin+'/users', this.editedItem)
             this.$root.$emit('DeviceCRUD refresh', 'list of users refreshed')
           }
           catch(e){
@@ -155,7 +156,7 @@ export default {
         else{
           try{
             this.editedItem.isAdmin = this.editedItem.admin
-            await axios.put('http://localhost:8080/users', this.editedItem)
+            await axios.put(this.origin+'/users', this.editedItem)
             this.$root.$emit('DeviceCRUD refresh', 'list of users refreshed')
           }catch(e){
             alert('Username already used!')
