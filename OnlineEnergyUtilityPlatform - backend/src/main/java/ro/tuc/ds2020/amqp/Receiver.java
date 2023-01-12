@@ -13,7 +13,6 @@ import ro.tuc.ds2020.controllers.handlers.exceptions.model.ResourceNotFoundExcep
 import ro.tuc.ds2020.dtos.MeasurementJSON;
 import ro.tuc.ds2020.dtos.builders.MeasurementBuilder;
 import ro.tuc.ds2020.services.MeasurementService;
-import ro.tuc.ds2020.websocket.Notification;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -66,7 +65,7 @@ public class Receiver implements CommandLineRunner {
                         measurementDTO = measurementService.insert(measurementFromJSON);
                     }
                     if (measurementDTO.getConsumption() > measurementDTO.getDevice().getMaxConsumption()){
-                        simpMessagingTemplate.convertAndSend("/topic/notify", new Notification(measurementDTO));
+                        simpMessagingTemplate.convertAndSend("/topic/notify", new ConsumptionNotification(measurementDTO));
                     }
                 }
                 catch(ResourceNotFoundException e){

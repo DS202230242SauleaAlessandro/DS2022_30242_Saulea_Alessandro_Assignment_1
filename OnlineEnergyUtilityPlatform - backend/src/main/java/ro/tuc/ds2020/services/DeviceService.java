@@ -39,7 +39,6 @@ public class DeviceService {
     }
 
     public DeviceDTO insert(DeviceDTO deviceDTO){
-        System.out.println(deviceDTO.getUserDTO().getUuid());
         var user = findUserById(deviceDTO.getUserDTO().getUuid());
         var device = DeviceBuilder.toEntity(deviceDTO);
         device.setUser(user);

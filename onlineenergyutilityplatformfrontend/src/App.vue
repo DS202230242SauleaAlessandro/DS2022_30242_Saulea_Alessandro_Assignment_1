@@ -21,8 +21,9 @@
       <v-spacer></v-spacer>
       <div v-if="currentUser != null">
         <v-chip class="ma-2" color="primary">
-          Bine ai venit, <b>{{ currentUser.name}}</b>!
+          Welcome, <b>{{ currentUser.name}}</b>!
         </v-chip>
+        <v-btn text @click="$router.push({path: '/chat'})">Chatbox</v-btn>
         <v-btn v-if="currentUser.admin" text @click="$router.push({path: '/admin'})">
           Administration
         </v-btn>

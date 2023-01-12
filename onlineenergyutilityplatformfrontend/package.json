@@ -16,6 +16,7 @@
     "vue": "^2.6.14",
     "vue-chartkick": "^0.6.1",
     "vue-router": "^3.5.1",
+    "vue2-perfect-scrollbar": "^1.5.56",
     "vuejs-datetimepicker": "^1.1.13",
     "vuetify": "^2.6.0",
     "vuex": "^3.6.2"

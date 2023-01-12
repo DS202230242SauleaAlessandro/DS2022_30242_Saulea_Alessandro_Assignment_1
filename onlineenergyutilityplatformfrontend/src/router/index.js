@@ -5,6 +5,7 @@ import Home from "@/views/Home";
 import Admin from "@/views/Admin";
 import AdminDevice from "@/views/AdminDevice";
 import Device from "@/views/Device";
+import Chat from "@/views/Chat.vue";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/devices/:id',
     name: 'device',
     component: Device
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: Chat,
   }
 ]
 
